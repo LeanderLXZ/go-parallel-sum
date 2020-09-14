@@ -13,7 +13,15 @@ import (
 )
 
 func Sum(fileName string) int {
-	return 0
+	nums, err := readInts(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	sum := 0
+	for i := 0; i < len(nums); i++ {
+		sum += nums[i]
+	}
+	return sum
 }
 
 //Read integers from file
@@ -35,5 +43,3 @@ func readInts(fileName string) ([]int, error) {
 	}
 	return res, nil
 }
-
-
