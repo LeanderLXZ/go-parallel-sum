@@ -16,9 +16,35 @@ import (
 // and launch `goRoutineNums` go routines to do calculation
 // return sum of these Integers
 // You Must start exact `goRoutineNums` go routines or you lose points here
-func Sum(goRoutineNums int, fileName string) int {
+func SumRoutine(nums []int, c chan int) int {
+	sum := 0
+	for _, v := range s {
+		sum += v
+	}
+	return sum
+}
+
+func Sum(goRoutineNum int, fileName string) int {
 	//TODO Add your code here
-	return 0
+	nums, err := readInts(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	chunkSize := len(nums) / goRoutineNum
+	for i := 0; i < len(nums); i += chunkSize {
+		end := i + chunkSize
+		if end > len(nums) {
+			end = len(nums)
+		}
+		chunk := nums[i:end]
+		go SumRoutine(chunk)
+	}
+
+	sum := 0
+	for i := 0; i < len(nums); i++ {
+		sum += nums[i]
+	}
+	return sum
 }
 
 //Read integers from file
@@ -40,4 +66,3 @@ func readInts(fileName string) ([]int, error) {
 	}
 	return res, nil
 }
-

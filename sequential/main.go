@@ -14,7 +14,7 @@ func main() {
 	sum := 0
 	//@TODO read file name from command line
 	//the argument should be `-f`
-	fileName := flag.String("f", "", "string")
+	fileName := flag.String("f", "", "file name")
 	flag.Parse()
 	sum = Sum(*fileName)
 

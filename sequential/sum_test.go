@@ -10,11 +10,11 @@ import (
 	"testing"
 )
 
-func sequentialSumTest(t *testing.T, fileName string,  expected int) {
+func sequentialSumTest(t *testing.T, fileName string, expected int) {
 	res := Sum(fileName)
 	if res != expected {
 		t.Fatal(fmt.Sprintf(
-			"Test %s Failed: expected %d, got %d\n", fileName,expected, res))
+			"Test %s Failed: expected %d, got %d\n", fileName, expected, res))
 	}
 }
 
@@ -28,4 +28,8 @@ func Test0_2(t *testing.T) {
 
 func Test0_3(t *testing.T) {
 	sequentialSumTest(t, "test3.txt", 31418)
+}
+
+func Test0_4(t *testing.T) {
+	sequentialSumTest(t, "test4.txt", 10)
 }

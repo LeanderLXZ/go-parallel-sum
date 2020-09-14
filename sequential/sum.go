@@ -18,8 +18,8 @@ func Sum(fileName string) int {
 		log.Fatal(err)
 	}
 	sum := 0
-	for i := 0; i < len(nums); i++ {
-		sum += nums[i]
+	for _, v := range nums {
+		sum += v
 	}
 	return sum
 }
