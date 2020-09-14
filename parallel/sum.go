@@ -16,15 +16,6 @@ import (
 // and launch `goRoutineNums` go routines to do calculation
 // return sum of these Integers
 // You Must start exact `goRoutineNums` go routines or you lose points here
-func SumRoutine(nums []int, c chan int) {
-	// Calculate sum for each go routine
-	sum := 0
-	for _, v := range nums {
-		sum += v
-	}
-	c <- sum
-}
-
 func Sum(goRoutineNum int, fileName string) int {
 	//TODO Add your code here
 	if goRoutineNum < 1 {
@@ -53,7 +44,14 @@ func Sum(goRoutineNum int, fileName string) int {
 		if end > len(nums) {
 			end = len(nums)
 		}
-		go SumRoutine(nums[i:end], ch)
+		chunk := nums[i:end]
+		go func() {
+			sumRoutine := 0
+			for _, v := range chunk {
+				sumRoutine += v
+			}
+			ch <- sumRoutine
+		}()
 	}
 
 	// Receive value from the channel and calculate the sum of go routines
