@@ -7,6 +7,7 @@ package main
 
 import (
 	"bufio"
+
 	// "fmt"
 	"log"
 	"os"
@@ -31,21 +32,9 @@ func Sum(goRoutineNum int, fileName string) int {
 	// Create channel with size of go routine number
 	ch := make(chan int)
 
-	// Calculate chunk size for each go routine
-	var chunkSize int
-	if len(nums)%goRoutineNum == 0 {
-		chunkSize = len(nums) / goRoutineNum
-	} else {
-		chunkSize = len(nums)/goRoutineNum + 1
-	}
-
 	// Create go routines
-	for i := 0; i < len(nums); i += chunkSize {
-		end := i + chunkSize
-		if end > len(nums) {
-			end = len(nums)
-		}
-		chunk := nums[i:end]
+	for i := 0; i < goRoutineNum; i++ {
+		chunk := nums[i*len(nums)/goRoutineNum : (i+1)*len(nums)/goRoutineNum]
 		go func() {
 			sumRoutine := 0
 			for _, v := range chunk {

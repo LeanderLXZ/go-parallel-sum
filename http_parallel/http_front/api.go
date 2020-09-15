@@ -31,15 +31,24 @@ func SumHandler(wr http.ResponseWriter, r *http.Request) {
 	//TODO You should add your code here
 	//HINT: Receive fileName(f) and goRoutineNums(g) from URL
 	//HINT: Call sumCli.Sum(fileName, goRoutineNums) to retrieve sum result
+
+	// Get the parse of url string
 	u, err := url.Parse(r.URL.String())
 	if err != nil {
 		panic(err)
 	}
 
-	m, _ := url.ParseQuery(u.RawQuery)
+	// Get the parse query
+	m, err := url.ParseQuery(u.RawQuery)
+	if err != nil {
+		panic(err)
+	}
+
+	// Assign variables
 	fileName = m.Get("f")
 	goRoutineNums, err = strconv.Atoi(m.Get("g"))
 
+	// Calculate summation
 	totalSum, err = sumCli.Sum(fileName, goRoutineNums)
 	if err != nil {
 		panic(err)
