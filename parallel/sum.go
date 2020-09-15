@@ -7,6 +7,7 @@ package main
 
 import (
 	"bufio"
+	// "fmt"
 	"log"
 	"os"
 	"strconv"
@@ -28,7 +29,7 @@ func Sum(goRoutineNum int, fileName string) int {
 	}
 
 	// Create channel with size of go routine number
-	ch := make(chan int, goRoutineNum)
+	ch := make(chan int)
 
 	// Calculate chunk size for each go routine
 	var chunkSize int
@@ -58,6 +59,8 @@ func Sum(goRoutineNum int, fileName string) int {
 	sum := 0
 	for i := 0; i < goRoutineNum; i++ {
 		sum += <-ch
+		// Check if the threads are parallel
+		// fmt.Println(sum)
 	}
 	return sum
 }

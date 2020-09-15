@@ -15,15 +15,52 @@ import (
 	"strconv"
 )
 
-
-
 // Read a list of integers from `fileName`
 // and launch `goRoutineNums` go routines to do sum up
 // return sum of these Integers
-func Sum(goRoutineNums int, fileName string) int {
-	sum := 0
+func Sum(goRoutineNum int, fileName string) int {
 	//TODO Add your code here
+	if goRoutineNum < 1 {
+		log.Println("goRoutineNum must >= 1!")
+	}
 
+	nums, err := readInts(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create channel with size of go routine number
+	ch := make(chan int)
+
+	// Calculate chunk size for each go routine
+	var chunkSize int
+	if len(nums)%goRoutineNum == 0 {
+		chunkSize = len(nums) / goRoutineNum
+	} else {
+		chunkSize = len(nums)/goRoutineNum + 1
+	}
+
+	// Create go routines
+	for i := 0; i < len(nums); i += chunkSize {
+		end := i + chunkSize
+		if end > len(nums) {
+			end = len(nums)
+		}
+		chunk := nums[i:end]
+		go func() {
+			sumRoutine := 0
+			for _, v := range chunk {
+				sumRoutine += v
+			}
+			ch <- sumRoutine
+		}()
+	}
+
+	// Receive value from the channel and calculate the sum of go routines
+	sum := 0
+	for i := 0; i < goRoutineNum; i++ {
+		sum += <-ch
+	}
 	return sum
 }
 
@@ -46,4 +83,3 @@ func readInts(fileName string) ([]int, error) {
 	}
 	return res, nil
 }
-
