@@ -4,7 +4,6 @@
 * @Desc:
  */
 
-
 package main
 
 import (
@@ -13,11 +12,13 @@ import (
 	"log"
 	"net/http"
 	"net/rpc"
+	"net/url"
+	"strconv"
 	"time"
 )
 
-
 var sumCli = SumServiceClient{}
+
 func SumHandler(wr http.ResponseWriter, r *http.Request) {
 	msg, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -30,20 +31,31 @@ func SumHandler(wr http.ResponseWriter, r *http.Request) {
 	//TODO You should add your code here
 	//HINT: Receive fileName(f) and goRoutineNums(g) from URL
 	//HINT: Call sumCli.Sum(fileName, goRoutineNums) to retrieve sum result
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		panic(err)
+	}
 
+	m, _ := url.ParseQuery(u.RawQuery)
+	fileName = m.Get("f")
+	goRoutineNums, err = strconv.Atoi(m.Get("g"))
 
+	totalSum, err = sumCli.Sum(fileName, goRoutineNums)
+	if err != nil {
+		panic(err)
+	}
 
 	//DO NOT MODIFY OUTPUT FORMAT!
 	type OutPut struct {
-		FileName string `json:"file_name"`
-		GoRoutineNums int `json:"go_routine_nums"`
-		TotalSum int `json:"sum"`
+		FileName      string `json:"file_name"`
+		GoRoutineNums int    `json:"go_routine_nums"`
+		TotalSum      int    `json:"sum"`
 	}
 
 	out := OutPut{
-		FileName: fileName,
+		FileName:      fileName,
 		GoRoutineNums: goRoutineNums,
-		TotalSum: totalSum,
+		TotalSum:      totalSum,
 	}
 	data, err := json.Marshal(out)
 	if err != nil {
@@ -63,13 +75,12 @@ func main() {
 }
 
 func regRpcService() {
-	client, err := rpc.Dial("tcp",  ":8083")
+	client, err := rpc.Dial("tcp", ":8083")
 	if err != nil {
 		log.Fatal("ListenTCP error:", err)
 	}
 	sumCli.Client = client
 }
-
 
 func handleHttp() {
 	http.HandleFunc("/", SumHandler)
@@ -78,6 +89,3 @@ func handleHttp() {
 		log.Fatal(err)
 	}
 }
-
-
-

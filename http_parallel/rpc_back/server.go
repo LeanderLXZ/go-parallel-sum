@@ -12,12 +12,12 @@ import (
 )
 
 type SumServiceReq struct {
-	FileName string
-	GoRoutineNums 	int
+	FileName      string
+	GoRoutineNums int
 }
 
 type SumServiceResp struct {
-	Sum	int
+	Sum int
 }
 
 type SumService struct {
@@ -25,6 +25,7 @@ type SumService struct {
 
 func (s *SumService) CalcSum(args SumServiceReq, resp *SumServiceResp) error {
 	//TODO Add your code here
+	resp.Sum = Sum(args.GoRoutineNums, args.FileName)
 	return nil
 }
 
@@ -43,4 +44,3 @@ func main() {
 		rpc.ServeConn(conn)
 	}
 }
-
