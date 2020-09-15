@@ -45,8 +45,8 @@ func SumHandler(wr http.ResponseWriter, r *http.Request) {
 	}
 
 	// Assign variables
-	fileName = m.Get("f")
-	goRoutineNums, err = strconv.Atoi(m.Get("g"))
+	fileName = m["f"][0]
+	goRoutineNums, _ = strconv.Atoi(m["g"][0])
 
 	// Calculate summation
 	totalSum, err = sumCli.Sum(fileName, goRoutineNums)
